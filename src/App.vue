@@ -11,12 +11,12 @@ const lastUpdateTime = ref('')
 const fetchWeatherData = async () => {
   loading.value = true
   error.value = ''
-  
+
   try {
     const randomParam = Math.random()
     const timestamp = Date.now()
     const url = `/api/data_cache/video/rt/rt_list.js?random=${randomParam}&_=${timestamp}`
-    
+
     const response = await fetch(url, {
       headers: {
         'accept': '*/*',
@@ -37,13 +37,13 @@ const fetchWeatherData = async () => {
       mode: 'cors',
       credentials: 'include'
     })
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
     }
-    
+
     const text = await response.text()
-    
+
     // 解析JSONP响应
     const match = text.match(/var SZ121_DATA = (\[.*?\]);/)
     if (match) {
@@ -109,33 +109,21 @@ const getVideoUrl = (mp4Path) => {
         <div v-for="station in weatherData" :key="station.code" class="weather-card">
           <div class="card-header">
             <h3>{{ station.name }}</h3>
-            <span class="station-code">编号: {{ station.code }}</span>
           </div>
-          
+
           <div class="card-content">
             <div class="location-info">
               <p class="address">📍 {{ formatAddress(station.addr) }}</p>
-              <div class="coordinates">
-                <span>🌐 经度: {{ station.longitude }}°</span>
-                <span>🌐 纬度: {{ station.latitude }}°</span>
-                <span>⛰️ 海拔: {{ station.height }}m</span>
+              <div class="elevation">
+                <span class="elevation-info">⛰️ 海拔: {{ station.height }}m</span>
               </div>
             </div>
-            
+
             <div v-if="station.mp4" class="video-section">
-              <video 
-                :src="getVideoUrl(station.mp4)" 
-                controls 
-                preload="metadata"
-                class="weather-video"
-                @error="(e) => console.warn('视频加载失败:', station.name, e)"
-              >
+              <video :src="getVideoUrl(station.mp4)" controls preload="metadata" class="weather-video"
+                @error="(e) => console.warn('视频加载失败:', station.name, e)">
                 您的浏览器不支持视频播放
               </video>
-            </div>
-            
-            <div v-if="station.obtid" class="additional-info">
-              <span class="obtid">🆔 观测站ID: {{ station.obtid }}</span>
             </div>
           </div>
         </div>
@@ -169,7 +157,7 @@ const getVideoUrl = (mp4Path) => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: 
+  background:
     radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
     radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
     radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
@@ -293,8 +281,13 @@ const getVideoUrl = (mp4Path) => {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .error {
@@ -347,8 +340,8 @@ const getVideoUrl = (mp4Path) => {
 }
 
 .weather-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.18);
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
 }
 
 .card-header {
@@ -369,15 +362,7 @@ const getVideoUrl = (mp4Path) => {
   letter-spacing: -0.01em;
 }
 
-.station-code {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-}
+
 
 .card-content {
   space-y: 1rem;
@@ -394,14 +379,11 @@ const getVideoUrl = (mp4Path) => {
   line-height: 1.4;
 }
 
-.coordinates {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem;
-  font-size: 0.85rem;
+.elevation {
+  margin-top: 0.5rem;
 }
 
-.coordinates span {
+.elevation-info {
   background: rgba(255, 255, 255, 0.8);
   color: #2d3436;
   padding: 0.5rem 1rem;
@@ -409,16 +391,20 @@ const getVideoUrl = (mp4Path) => {
   border: 1px solid rgba(102, 126, 234, 0.1);
   backdrop-filter: blur(10px);
   font-weight: 500;
+  font-size: 0.85rem;
   transition: all 0.3s ease;
+  display: inline-block;
 }
 
-.coordinates span:hover {
+.elevation-info:hover {
   background: rgba(102, 126, 234, 0.1);
   transform: translateY(-1px);
 }
 
+
+
 .video-section {
-  margin: 1.5rem 0;
+  margin: 1.5rem 0 0 0;
 }
 
 .weather-video {
@@ -426,33 +412,9 @@ const getVideoUrl = (mp4Path) => {
   max-height: 280px;
   border-radius: 16px;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
 }
 
-.weather-video:hover {
-  transform: scale(1.02);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
-}
 
-.additional-info {
-  margin-top: 1rem;
-}
-
-.obtid {
-  background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 16px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
-  transition: all 0.3s ease;
-}
-
-.obtid:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(0, 184, 148, 0.4);
-}
 
 .no-data {
   text-align: center;
@@ -485,26 +447,23 @@ const getVideoUrl = (mp4Path) => {
     flex-direction: column;
     text-align: center;
   }
-  
+
   .app-header h1 {
     font-size: 1.8rem;
   }
-  
+
   .weather-grid {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
-  
+
   .app-main {
     width: 95%;
     padding: 2rem 1rem;
   }
-  
-  .coordinates {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
+
+
+
   .weather-card {
     padding: 1.5rem;
   }
@@ -515,12 +474,12 @@ const getVideoUrl = (mp4Path) => {
     width: 98%;
     padding: 1.5rem 0.5rem;
   }
-  
+
   .weather-card {
     padding: 1.25rem;
     border-radius: 20px;
   }
-  
+
   .card-header {
     flex-direction: column;
     gap: 1rem;
@@ -528,11 +487,11 @@ const getVideoUrl = (mp4Path) => {
     margin-bottom: 1.25rem;
     padding-bottom: 1.25rem;
   }
-  
+
   .app-header h1 {
     font-size: 1.6rem;
   }
-  
+
   .weather-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
