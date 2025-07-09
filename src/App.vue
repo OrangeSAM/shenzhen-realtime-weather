@@ -156,27 +156,51 @@ const getVideoUrl = (mp4Path) => {
 <style scoped>
 .weather-app {
   min-height: 100vh;
-  background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.weather-app::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .app-header {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 1.5rem 2rem;
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 1.5rem;
+  position: relative;
+  z-index: 10;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .app-header h1 {
   margin: 0;
   color: #2d3436;
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .header-actions {
@@ -187,21 +211,38 @@ const getVideoUrl = (mp4Path) => {
 }
 
 .refresh-btn {
-  background: #00b894;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 25px;
+  padding: 0.875rem 2rem;
+  border-radius: 50px;
   cursor: pointer;
   font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+  font-size: 0.95rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.refresh-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.refresh-btn:hover::before {
+  left: 100%;
 }
 
 .refresh-btn:hover:not(:disabled) {
-  background: #00a085;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 184, 148, 0.4);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
 }
 
 .refresh-btn:disabled {
@@ -213,14 +254,22 @@ const getVideoUrl = (mp4Path) => {
 .update-time {
   color: #636e72;
   font-size: 0.9rem;
-  background: rgba(255, 255, 255, 0.8);
-  padding: 0.5rem 1rem;
-  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.75rem 1.25rem;
+  border-radius: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  font-weight: 500;
 }
 
 .app-main {
-  padding: 2rem;
+  width: 90%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
   min-height: calc(100vh - 200px);
+  position: relative;
+  z-index: 5;
 }
 
 .loading {
@@ -251,76 +300,83 @@ const getVideoUrl = (mp4Path) => {
 .error {
   text-align: center;
   color: white;
-  background: rgba(231, 76, 60, 0.9);
-  padding: 2rem;
-  border-radius: 15px;
+  background: rgba(231, 76, 60, 0.95);
+  backdrop-filter: blur(20px);
+  padding: 2.5rem;
+  border-radius: 24px;
   margin: 2rem auto;
   max-width: 500px;
+  box-shadow: 0 20px 60px rgba(231, 76, 60, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .retry-btn {
   background: white;
   color: #e74c3c;
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 25px;
+  padding: 0.875rem 2rem;
+  border-radius: 50px;
   cursor: pointer;
   font-weight: 600;
-  margin-top: 1rem;
-  transition: all 0.3s ease;
+  margin-top: 1.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
 }
 
 .retry-btn:hover {
   background: #f8f9fa;
-  transform: translateY(-2px);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 35px rgba(255, 255, 255, 0.4);
 }
 
 .weather-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  gap: 2rem;
-  max-width: 1400px;
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: 2.5rem;
   margin: 0 auto;
 }
 
 .weather-card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  padding: 1.5rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .weather-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.18);
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid #f1f2f6;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid rgba(102, 126, 234, 0.1);
+  position: relative;
 }
 
 .card-header h3 {
   margin: 0;
   color: #2d3436;
-  font-size: 1.4rem;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 .station-code {
-  background: #74b9ff;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 0.3rem 0.8rem;
-  border-radius: 15px;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 600;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
 .card-content {
@@ -346,11 +402,19 @@ const getVideoUrl = (mp4Path) => {
 }
 
 .coordinates span {
-  background: #f8f9fa;
+  background: rgba(255, 255, 255, 0.8);
   color: #2d3436;
-  padding: 0.4rem 0.8rem;
-  border-radius: 12px;
-  border: 1px solid #e9ecef;
+  padding: 0.5rem 1rem;
+  border-radius: 16px;
+  border: 1px solid rgba(102, 126, 234, 0.1);
+  backdrop-filter: blur(10px);
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.coordinates span:hover {
+  background: rgba(102, 126, 234, 0.1);
+  transform: translateY(-1px);
 }
 
 .video-section {
@@ -359,9 +423,15 @@ const getVideoUrl = (mp4Path) => {
 
 .weather-video {
   width: 100%;
-  max-height: 250px;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  max-height: 280px;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.weather-video:hover {
+  transform: scale(1.02);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
 }
 
 .additional-info {
@@ -369,12 +439,19 @@ const getVideoUrl = (mp4Path) => {
 }
 
 .obtid {
-  background: #00b894;
+  background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
   color: white;
-  padding: 0.4rem 0.8rem;
-  border-radius: 12px;
+  padding: 0.5rem 1rem;
+  border-radius: 16px;
   font-size: 0.85rem;
   font-weight: 600;
+  box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+  transition: all 0.3s ease;
+}
+
+.obtid:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 184, 148, 0.4);
 }
 
 .no-data {
@@ -385,11 +462,15 @@ const getVideoUrl = (mp4Path) => {
 }
 
 .app-footer {
-  background: rgba(45, 52, 54, 0.9);
+  background: rgba(45, 52, 54, 0.95);
+  backdrop-filter: blur(20px);
   color: white;
   text-align: center;
-  padding: 1.5rem;
-  margin-top: 2rem;
+  padding: 2rem;
+  margin-top: 3rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 10;
 }
 
 .app-footer p {
@@ -400,38 +481,61 @@ const getVideoUrl = (mp4Path) => {
 /* 响应式设计 */
 @media (max-width: 768px) {
   .app-header {
-    padding: 1rem;
+    padding: 1.5rem 1rem;
     flex-direction: column;
     text-align: center;
   }
   
   .app-header h1 {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
+  }
+  
+  .weather-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .app-main {
+    width: 95%;
+    padding: 2rem 1rem;
+  }
+  
+  .coordinates {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .weather-card {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-main {
+    width: 98%;
+    padding: 1.5rem 0.5rem;
+  }
+  
+  .weather-card {
+    padding: 1.25rem;
+    border-radius: 20px;
+  }
+  
+  .card-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
+  }
+  
+  .app-header h1 {
+    font-size: 1.6rem;
   }
   
   .weather-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
-  }
-  
-  .app-main {
-    padding: 1rem;
-  }
-  
-  .coordinates {
-    flex-direction: column;
-  }
-}
-
-@media (max-width: 480px) {
-  .weather-card {
-    padding: 1rem;
-  }
-  
-  .card-header {
-    flex-direction: column;
-    gap: 0.5rem;
-    text-align: center;
   }
 }
 </style>
