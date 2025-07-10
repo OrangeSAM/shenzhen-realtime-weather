@@ -120,8 +120,8 @@ const getVideoUrl = (mp4Path) => {
             </div>
 
             <div v-if="station.mp4" class="video-section">
-              <video :src="getVideoUrl(station.mp4)" controls preload="metadata" class="weather-video"
-                @error="(e) => console.warn('视频加载失败:', station.name, e)">
+              <video :src="getVideoUrl(station.mp4)" autoplay muted loop preload="metadata"
+                class="weather-video" @error="(e) => console.warn('视频加载失败:', station.name, e)">
                 您的浏览器不支持视频播放
               </video>
             </div>
